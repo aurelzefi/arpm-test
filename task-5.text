@@ -1,0 +1,44 @@
+Answer A:
+
+ - The app:example-command will run every hour
+ - withoutOverlapping() means that it will not tun if the previous same command is still running
+ - onOneServer() makes sure that if the application is on multiple servers, so the scheduler is registered in multiple servers, the command will run only on one server. The first server to get the command, will run it and block other servers from obtaining it
+ - runInBackground(): Tasks that are scheduled to run at the same time, by default will run in the order they are defined. This method allows for the task to run in the background, so it will not have to wait for other tasks to finish before starting
+
+Answer B:
+
+I don't think they have anything in common.
+
+Cache facade is a high level layer to access the underlying implementation of the cache functionality in a laravel application.
+It's supposed to store "short-lived" data.
+
+It can be used like this:
+
+// Get the given cache key
+Cache::get('cache-key')
+
+Cache::put('cache-key', 'value', $seconds = 10);
+
+// Retrieve the cache key, or store the value returned from the callable if it has expired
+$value = Cache::remember('cache-key', now()->addMinutes(15), function () {
+    //
+});
+
+Context is a new API in laravel that allows to share data through requests, jobs, logs etc.
+
+It can be used like this:
+
+in a middleware:
+
+Context::add('key', 'value');
+
+This information is automatically added in the log context. It is also passed to the dispatched jobs, and its added to the current context when the job dispatches
+
+The information can also be retrieved in every part of the application like this:
+
+$value = Context::get('key');
+
+Answer C:
+    $model->update() is just a proxy for $query->update(), the only thing it does is passes the updated_at column to be set. It also dispatches the "updated" event
+    query->update() is the actual action for the update, it's in the query builder (not eloquent builder) and does not dispatch events
+    $model->updateQuietly() calls update without dispatching the update event
