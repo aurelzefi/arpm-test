@@ -39,6 +39,6 @@ The information can also be retrieved in every part of the application like this
 $value = Context::get('key');
 
 Answer C:
-    $model->update() is just a proxy for $query->update(), the only thing it does is passes the updated_at column to be set. It also dispatches the "updated" event
+    $model->update() is a proxy for $query->update(), it sets the created_at and update_at timestamps and in the end calls eloquent builder update which calls query builder update. It also dispatches the "updated" event
     query->update() is the actual action for the update, it's in the query builder (not eloquent builder) and does not dispatch events
     $model->updateQuietly() calls update without dispatching the update event
