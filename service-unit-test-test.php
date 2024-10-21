@@ -106,6 +106,7 @@ class SpreadServiceTest extends TestCase
 
         $this->container->instance(Importer::class, $mock);
 
+        // Assert the database has only one product
         $this
             ->assertDatabaseCount(1)
             ->assertDatabaseHas(Product::class, [
@@ -113,6 +114,7 @@ class SpreadServiceTest extends TestCase
                 'quantity' => $quantity1,
             ]);
 
+        // Assert the job was dispatched only once
         Bus::assertNotDispatchedTimes(ProcessProductImage::class, 1);
     }
 }
